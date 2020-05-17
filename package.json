@@ -1,55 +1,40 @@
 {
-  "name": "my-app",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@material-ui/core": "^4.9.8",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.47",
-    "@types/jest": "^25.1.4",
-    "@types/node": "^12.12.34",
-    "@types/react": "^16.9.29",
-    "@types/react-dom": "^16.9.5",
-    "axios": "^0.19.2",
-    "lodash": "^4.17.15",
-    "moment": "^2.24.0",
-    "notistack": "^0.9.9",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-redux": "^7.2.0",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.1.0",
-    "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
-    "styled-components": "^5.0.1",
-    "typescript": "^3.8.3",
-    "validator": "^13.0.0"
-  },
+  "name": "ran-weather-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "server": "nodemon server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ranchuk/weather_app.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "async-redis": "^1.1.7",
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "chalk": "^4.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^3.22.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.1.0",
+    "nodemon": "^2.0.4",
+    "redis": "^3.0.2",
+    "sequelize": "^5.21.7"
   },
-  "devDependencies": {
-    "@types/lodash": "^4.14.149",
-    "@types/react-redux": "^7.1.7",
-    "@types/react-router-dom": "^5.1.3",
-    "@types/styled-components": "^5.0.1"
-  }
+  "bugs": {
+    "url": "https://github.com/ranchuk/weather_app/issues"
+  },
+  "homepage": "https://github.com/ranchuk/weather_app#readme"
 }
