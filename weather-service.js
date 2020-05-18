@@ -1,7 +1,14 @@
 const axios = require('axios');
-const client = require('./server').redisClient
-
+const CachingService = require('./cache-service')
 class WeatherService {
+  
+  constructor() {
+    this.cachingService = new CachingService({
+        host: process.env.REDIS_HOST || '127.0.0.1',
+        port: process.env.REDIS_PORT || 6379 ,
+        password:process.env.REDIS_PASSWORD
+    })
+}
   findFavoritesWeather= async (favoritesKeys) => {
     console.log(favoritesKeys)
     const asyncRequests = []
@@ -21,7 +28,7 @@ class WeatherService {
         else {
             console.log('Fetching 5 days forecast by key from accuweather')
             const res = await axios.get(`${process.env.ACCUWEATHER_BASE_URL}/forecasts/v1/daily/5day/${cityKey}?apikey=${process.env.ACCUWEATHER_KEY}`);
-            client.setex(`${cityKey}_5`, 3600, JSON.stringify(res.data));
+            this.cachingService.redisClient.setex(`${cityKey}_5`, 3600, JSON.stringify(res.data));
             return res.data;
         }
       }
@@ -35,7 +42,7 @@ class WeatherService {
       let returnValue = false;
       try{
           console.log(`cache search for city key: ${cityKey}`)
-          returnValue = await client.get(`${cityKey}_5`);
+          returnValue = await this.cachingService.redisClient.get(`${cityKey}_5`);
           if(returnValue){
             console.log(`Found in cache -no need to fetch again 5 days forecast from accuweather for cityKey=${cityKey}`)
           }
@@ -58,7 +65,7 @@ class WeatherService {
             console.log('Fetching city weather by key from accuweather')
 
             const res = await axios.get(`${process.env.ACCUWEATHER_BASE_URL}/currentconditions/v1/${cityKey}?apikey=${process.env.ACCUWEATHER_KEY}`);
-            client.setex(cityKey, 3600, JSON.stringify(res.data));
+            this.cachingService.redisClient.setex(cityKey, 3600, JSON.stringify(res.data));
             return res.data;
         }
       }
@@ -72,7 +79,7 @@ class WeatherService {
       let returnValue = false;
       try{
           console.log(`cache search for city key: ${cityKey}`)
-          returnValue = await client.get(cityKey);
+          returnValue = await this.cachingService.redisClient.get(cityKey);
           if(returnValue){
             console.log(`Found in cache -no need to fetch again currentcity weather from accuweather for cityKey=${cityKey}`)
           }
@@ -94,7 +101,7 @@ class WeatherService {
             else {
                 console.log('Fetching from accuweather')
                 const res = await axios.get(`${process.env.ACCUWEATHER_BASE_URL}/locations/v1/cities/autocomplete?apikey=${process.env.ACCUWEATHER_KEY}&q=${query}`);
-                client.set(query, JSON.stringify(res.data));
+                this.cachingService.redisClient.set(query, JSON.stringify(res.data));
                 // client.setex(query, 60, 'asdasd');
                 return res.data;
             }
@@ -110,7 +117,7 @@ class WeatherService {
       let returnValue = false;
         try{
             console.log(`cache search for: ${query}`)
-            returnValue = await client.get(query);
+            returnValue = await this.cachingService.redisClient.get(query);
             if(returnValue){
               console.log(`Found in cache -no need to fetch again from accuweather for query=${query}`)
             }
