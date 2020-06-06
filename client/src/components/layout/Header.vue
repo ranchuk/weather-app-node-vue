@@ -1,18 +1,23 @@
 <template>
     <header class="header">
-        <h1>Weather App</h1>
-        <div class="">
-        <input  class="button_home" type="button" value="Home" @click="redirectToHome"/>
-        <input  class="button_favorites" type="button" value="Favorites" @click="redirectToFavorites"/>
-        </div>
+        <img v-bind:src="require('../../pictures/appLogo.png')" alt="logo" width="100px" height="100px"/>  
+        <span v-if="currentRouteName === 'Home'"><SearchBar /></span>
+        <div class="buttons">          
+        <input class="button" type="button" value="Home" @click="redirectToHome"  v-if="currentRouteName === 'Favorites'"/>
+        <input class="button" type="button" value="Favorites" @click="redirectToFavorites" v-if="currentRouteName === 'Home'"/>
+        </div> 
     </header>
 </template>
 
 <script>
 import router from '../../router'
+import SearchBar from '../autoCompleteSearch/searchBar'
 
 export default {
     name: "Header",
+    components: {
+        SearchBar
+    },
     methods: {
         redirectToFavorites() {
             router.push('favorites')
@@ -20,22 +25,29 @@ export default {
         redirectToHome() {
             router.push('/')
         }
+    },
+    computed: {
+            currentRouteName() {
+                return this.$route.name;
+            }
     }
 }
 </script>
 
 <style scoped>
     .header {
+        font-size: 2.5rem;
+        display: flex;
+        flex-direction: row;
         color:white;
-        height: 50px;
-        border-bottom: 1px solid black;
+        /* border-bottom: 0.1rem solid black; */
+        justify-content: space-between;
+        align-items: center;
     }
-    .button_home {
-        width:50px;
-        height: 25px;
+    .buttons {
+        display: flex;
+        justify-content: space-between;
     }
-        .button_favorites {
-        width:80px;
-        height: 25px;
+    .button {
     }
 </style>

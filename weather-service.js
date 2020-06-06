@@ -10,7 +10,7 @@ class WeatherService {
     })
 }
   findFavoritesWeather= async (favoritesKeys) => {
-    console.log(favoritesKeys)
+    console.log({favoritesKeys})
     const asyncRequests = []
     for(let favoriteKey of favoritesKeys){
       asyncRequests.push(this.findCurrentCityWeather(favoriteKey))
@@ -41,7 +41,7 @@ class WeatherService {
     findFiveDaysForecastsCache = async (cityKey) => {
       let returnValue = false;
       try{
-          console.log(`cache search for city key: ${cityKey}`)
+          console.log(`cache search for 5 days weather for city key: ${cityKey}`)
           returnValue = await this.cachingService.redisClient.get(`${cityKey}_5`);
           if(returnValue){
             console.log(`Found in cache -no need to fetch again 5 days forecast from accuweather for cityKey=${cityKey}`)
@@ -78,7 +78,7 @@ class WeatherService {
     findCurrentCityWeatherCache = async (cityKey) => {
       let returnValue = false;
       try{
-          console.log(`cache search for city key: ${cityKey}`)
+          console.log(`cache search current weather for city key: ${cityKey}`)
           returnValue = await this.cachingService.redisClient.get(cityKey);
           if(returnValue){
             console.log(`Found in cache -no need to fetch again currentcity weather from accuweather for cityKey=${cityKey}`)
@@ -120,6 +120,41 @@ class WeatherService {
             returnValue = await this.cachingService.redisClient.get(query);
             if(returnValue){
               console.log(`Found in cache -no need to fetch again from accuweather for query=${query}`)
+            }
+            
+        }
+        catch(err){
+            console.log(err);
+            returnValue = false;
+        }
+        return JSON.parse(returnValue);
+    }
+
+    geoPositionSearch = async (cord) => {
+      try{
+        const cache_results = await this.geoPositionSearchCache(cord)
+        if (cache_results)  {
+          return cache_results;
+        }
+        else {
+          const res = await axios.get(`${process.env.ACCUWEATHER_BASE_URL}/locations/v1/cities/geoposition/search?apikey=${process.env.ACCUWEATHER_KEY}&q=${cord[0]},${cord[1]}`);
+          this.cachingService.redisClient.set(`geoPosition_${JSON.stringify(cord)}`, JSON.stringify(res.data));
+          return res.data;
+        }
+      }
+      catch (err){
+        console.log(err);
+        return false
+      }
+    }
+
+    geoPositionSearchCache = async (cord) => {
+      let returnValue = false;
+        try{
+            console.log(`cache search for cordinates: ${JSON.stringify(cord)}`)
+            returnValue = await this.cachingService.redisClient.get(`geoPosition_${JSON.stringify(cord)}`);
+            if(returnValue){
+              console.log(`Found in cache -no need to fetch again from accuweather for cordinates=${JSON.stringify(cord)}`)
             }
             
         }

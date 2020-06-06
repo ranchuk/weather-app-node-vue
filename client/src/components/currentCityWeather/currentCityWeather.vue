@@ -1,23 +1,29 @@
 <template>
-<div>
-<TodayWeather />
-<FiveDaysForecast />
-</div>
+  <div class="currentCityWeather">
+      <TodayWeather />
+      <FiveDaysForecastList />
+  </div>
 </template>
 
 <script>
 import TodayWeather from './todayWeather';
-import FiveDaysForecast from './fiveDaysForecast'
+import FiveDaysForecastList from './fiveDaysForecastList'
 
 export default {
   name: 'CurrentCityWeather',
   components: {
       TodayWeather,
-      FiveDaysForecast
+      FiveDaysForecastList
   }
 }
 </script>
 
 <style scoped>
-
+.currentCityWeather {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      height: 100%;
+}
 </style>

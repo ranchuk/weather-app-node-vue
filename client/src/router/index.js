@@ -1,13 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+// This fix for error handling when re direct to the same view route which we are currently on
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+};
+
+
 Vue.use(VueRouter)
 
   const routes = [
   {
-    path: '/',
+    path: '',
     name: 'Home',
-    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
+    component: () => import(/* webpackChunkName: "home" */ '../views/HomePage.vue')
   },
   {
     path: '/favorites',
@@ -15,7 +22,7 @@ Vue.use(VueRouter)
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "favorites" */ '../views/Favorites.vue')
+    component: () => import(/* webpackChunkName: "favorites" */ '../views/FavoritesPage.vue')
   }
 ]
 
