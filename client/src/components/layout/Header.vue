@@ -49,5 +49,8 @@ export default {
         justify-content: space-between;
     }
     .button {
+        padding: 1rem;
+        border-radius: 0.2rem;
+        cursor: pointer;
     }
 </style>

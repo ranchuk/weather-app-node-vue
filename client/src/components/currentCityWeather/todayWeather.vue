@@ -1,12 +1,8 @@
 <template>
   <div v-if="!currentCityIsLoading && currentCity && !loaderTimer" class="todayWeatherStyle">
         <div class="cityAndTempStyle">
-            <button class="favoritesButton" v-if="!isFavorite" @click="handleAddFavorite">
-                      <img v-bind:src="require('../../pictures/heart-outline.png')" alt="logo" width="40px" height="40px"/>  
-            </button>
-            <button class="favoritesButton" v-if="isFavorite" @click="handleRemoveFavorite">
-                      <img v-bind:src="require('../../pictures/heart.png')" alt="logo" width="40px" height="40px"/>  
-            </button>
+            <img class="favIcon" v-if="!isFavorite" @click="handleAddFavorite" v-bind:src="require('../../pictures/heart-outline.png')" alt="logo" width="40px" height="40px"/>  
+            <img class="favIcon" v-if="isFavorite" @click="handleRemoveFavorite" v-bind:src="require('../../pictures/heart.png')" alt="logo" width="40px" height="40px"/>  
             <span class="cityName" >{{currentCity.cityInfo.LocalizedName}}</span> 
             <div v-if="isCelsius">{{Math.round(currentCity.todayWeather.Temperature.Metric.Value)}}°C</div>
             <div v-if="!isCelsius">{{convertToF(Math.round(currentCity.todayWeather.Temperature.Metric.Value))}}°F</div>
@@ -88,11 +84,8 @@ export default {
                 font-size: 3rem;
     }
 }
-.favoritesButton {
-  /* width: 100px;
-  height: 50px; */
-  /* font-size: 2.5rem; */
-  /* border: 1px solid white; */
+.favIcon{
+  cursor: pointer;
 }
 .cityName {
     text-transform: uppercase;
